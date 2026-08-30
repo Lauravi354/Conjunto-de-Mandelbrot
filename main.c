@@ -17,6 +17,11 @@ int main(int argc, char *argv[]){
             printf("você excedeu algum limite de valor");
         }
         else{
+            int **matriz = (int**)malloc(altura * sizeof(int*));
+            for (int k = 0; k < altura; k++){
+                matriz[k] = (int*)malloc(largura * sizeof(int));
+            }
+            
             int i;
             int j;
             for (i = 0; i < altura; i++){
@@ -36,8 +41,21 @@ int main(int argc, char *argv[]){
                             break;
                         }
                     }
+                    matriz[i][j] = n;
                 }
             }
+            
+            for (i = 0; i < altura; i++){
+                for (j = 0; j < largura; j++){
+                    printf("%d ", matriz[i][j]);
+                }
+                printf("\n");
+            }
+            
+            for (int k = 0; k < altura; k++){
+                free(matriz[k]);
+            }
+            free(matriz);
         }
     }
 }
