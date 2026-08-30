@@ -21,10 +21,21 @@ int main(int argc, char *argv[]){
             int j;
             for (i = 0; i < altura; i++){
                 for(j = 0; j < largura; j++){
-                    double cr = -2 + i * (3 / largura);
-                    double ci = -1.5 + j * (3 / altura);
+                    double cr = -2.0 + j * (3.0 / largura);
+                    double ci = -1.5 + i * (3.0 / altura);
 
-                    int c = cr + ci*i;
+                    double zr = 0;
+                    double zi = 0;
+                    int n;
+                    for (n = 0; n < interacao; n++){
+                        double zr_novo = zr * zr - zi * zi + cr;
+                        double zi_novo = 2 * zr * zi + ci;
+                        zr = zr_novo;
+                        zi = zi_novo;
+                        if (zr * zr + zi * zi > 4.0){
+                            break;
+                        }
+                    }
                 }
             }
         }
