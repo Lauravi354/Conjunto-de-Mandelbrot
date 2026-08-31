@@ -45,12 +45,19 @@ int main(int argc, char *argv[]){
                 }
             }
             
+            FILE *arquivo = fopen("mandelbrot.pgm", "w");
+            fprintf(arquivo, "P2\n%d %d\n255\n", largura, altura);
+            
             for (i = 0; i < altura; i++){
                 for (j = 0; j < largura; j++){
-                    printf("%d ", matriz[i][j]);
+                    int pixel = (matriz[i][j] * 255) / interacao;
+                    fprintf(arquivo, "%d ", pixel);
                 }
-                printf("\n");
+                fprintf(arquivo, "\n");
             }
+            fclose(arquivo);
+            
+            printf("Imagem salva em mandelbrot.pgm\n");
             
             for (int k = 0; k < altura; k++){
                 free(matriz[k]);
