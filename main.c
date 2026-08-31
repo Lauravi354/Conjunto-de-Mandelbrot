@@ -37,6 +37,39 @@ void salvar_pgm(int **matriz, int altura, int largura, int interacao){
     fclose(arquivo);
 }
 
+int** executar_mandelbrot_serial(int altura, int largura, int interacao){
+    int **matriz = (int**)malloc(altura * sizeof(int*));
+    
+    if (matriz == NULL){
+        printf("Erro ao alocar memória para matriz\n");
+        return NULL;
+    }
+    
+    for (int k = 0; k < altura; k++){
+        matriz[k] = (int*)malloc(largura * sizeof(int));
+        
+        if (matriz[k] == NULL){
+            printf("Erro ao alocar memória para linha %d\n", k);
+            for (int i = 0; i < k; i++){
+                free(matriz[i]);
+            }
+            free(matriz);
+            return NULL;
+        }
+    }
+    
+    for (int i = 0; i < altura; i++){
+        for(int j = 0; j < largura; j++){
+            double cr = -2.0 + j * (3.0 / largura);
+            double ci = -1.5 + i * (3.0 / altura);
+
+            matriz[i][j] = calcular_pixel(cr, ci, interacao);
+        }
+    }
+    
+    return matriz;
+}
+
 int main(int argc, char *argv[]){
 
     if (argc < 5 || argc > 5){
@@ -54,20 +87,10 @@ int main(int argc, char *argv[]){
             return 1;
         }
         else{
-            int **matriz = (int**)malloc(altura * sizeof(int*));
-            for (int k = 0; k < altura; k++){
-                matriz[k] = (int*)malloc(largura * sizeof(int));
-            }
+            int **matriz = executar_mandelbrot_serial(altura, largura, interacao);
             
-            int i;
-            int j;
-            for (i = 0; i < altura; i++){
-                for(j = 0; j < largura; j++){
-                    double cr = -2.0 + j * (3.0 / largura);
-                    double ci = -1.5 + i * (3.0 / altura);
-
-                    matriz[i][j] = calcular_pixel(cr, ci, interacao);
-                }
+            if (matriz == NULL){
+                return 1;
             }
             
             salvar_pgm(matriz, altura, largura, interacao);
