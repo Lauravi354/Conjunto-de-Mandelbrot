@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <omp.h>
 
 int calcular_pixel(double cr, double ci, int interacao){
     double zr = 0;
@@ -71,6 +72,40 @@ int** executar_mandelbrot_serial(int altura, int largura, int interacao){
     return matriz;
 }
 
+int** executar_mandelbrot_openmp(int altura, int largura, int interacao, int threads){
+    int **matriz = (int**)malloc(altura * sizeof(int*));
+    
+    if (matriz == NULL){
+        printf("Erro ao alocar memória para matriz\n");
+        return NULL;
+    }
+    
+    for (int k = 0; k < altura; k++){
+        matriz[k] = (int*)malloc(largura * sizeof(int));
+        
+        if (matriz[k] == NULL){
+            printf("Erro ao alocar memória para linha %d\n", k);
+            for (int i = 0; i < k; i++){
+                free(matriz[i]);
+            }
+            free(matriz);
+            return NULL;
+        }
+    }
+    
+    #pragma omp parallel for num_threads(threads)
+    for (int i = 0; i < altura; i++){
+        for(int j = 0; j < largura; j++){
+            double cr = -2.0 + j * (3.0 / largura);
+            double ci = -1.5 + i * (3.0 / altura);
+
+            matriz[i][j] = calcular_pixel(cr, ci, interacao);
+        }
+    }
+    
+    return matriz;
+}
+
 int main(int argc, char *argv[]){
 
     if (argc < 5 || argc > 5){
@@ -93,8 +128,7 @@ int main(int argc, char *argv[]){
             struct timespec fim;
             clock_gettime(CLOCK_MONOTONIC, &inicio);
 
-            int **matriz = executar_mandelbrot_serial(altura, largura, interacao);
-
+            int **matriz = executar_mandelbrot_openmp(altura, largura, interacao, threads);
             if (matriz == NULL){
                 return 1;
             }
@@ -104,7 +138,7 @@ int main(int argc, char *argv[]){
             double tempo = (fim.tv_sec - inicio.tv_sec) +
                (fim.tv_nsec - inicio.tv_nsec) / 1000000000.0;
 
-            printf("Tempo serial: %f segundos\n", tempo);
+            printf("Tempo OpenMP: %f segundos\n", tempo);
             
             salvar_pgm(matriz, altura, largura, interacao);
             printf("Imagem salva em mandelbrot.pgm\n");
