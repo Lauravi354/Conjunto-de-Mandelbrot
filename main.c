@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int calcular_pixel(double cr, double ci, int interacao){
     double zr = 0;
@@ -87,11 +88,23 @@ int main(int argc, char *argv[]){
             return 1;
         }
         else{
+
+            struct timespec inicio;
+            struct timespec fim;
+            clock_gettime(CLOCK_MONOTONIC, &inicio);
+
             int **matriz = executar_mandelbrot_serial(altura, largura, interacao);
-            
+
             if (matriz == NULL){
                 return 1;
             }
+
+            clock_gettime(CLOCK_MONOTONIC, &fim);
+
+            double tempo = (fim.tv_sec - inicio.tv_sec) +
+               (fim.tv_nsec - inicio.tv_nsec) / 1000000000.0;
+
+            printf("Tempo serial: %f segundos\n", tempo);
             
             salvar_pgm(matriz, altura, largura, interacao);
             printf("Imagem salva em mandelbrot.pgm\n");
