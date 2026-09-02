@@ -291,7 +291,7 @@ int** executar_mandelbrot_pthread_2(int altura, int largura, int interacao, int 
         int ret = pthread_create(
             &tids[t],
             NULL,
-            calcular_pthread_2,
+            normalizar_pthread,
             (void *)dados[t]
         );
 
