@@ -32,15 +32,13 @@ int calcular_pixel(double cr, double ci, int interacao){
     return n;
 }
 
-void salvar_pgm(int **matriz, int altura, int largura, int interacao){
-    FILE *arquivo = fopen("mandelbrot.pgm", "w");
+void salvar_pgm(int **matriz, int altura, int largura, int interacao, char *nome_arquivo){
+    FILE *arquivo = fopen(nome_arquivo, "w");
     
     if (arquivo == NULL){
-        printf("Erro ao abrir arquivo mandelbrot.pgm\n");
+        printf("Erro ao abrir arquivo de saída\n");
         return;
     }
-    
-    fprintf(arquivo, "P2\n%d %d\n255\n", largura, altura);
     
     for (int i = 0; i < altura; i++){
         for (int j = 0; j < largura; j++){
@@ -148,6 +146,71 @@ void *calcular_pthread_2(void *arg){
     
     free(args);
     return NULL;
+}
+
+void *normalizar_pthread(void *arg){
+    DadosThread *args = (DadosThread *)arg;
+
+    for (int i = args->linha_inicio; i < args->linha_fim; i++){
+        for (int j = 0; j < args->largura; j++){
+            args->matriz[i][j] = (args->matriz[i][j] * 255) / args->interacao;
+        }
+    }
+
+    free(args);
+    return NULL;
+}
+
+int normalizar_matriz_pthread(int **matriz, int altura, int largura, int interacao, int threads){
+
+    pthread_t tids[threads];
+    DadosThread *dados[threads];
+
+    int linhas_por_thread = altura / threads;
+
+    for (int t = 0; t < threads; t++){
+
+        dados[t] = (DadosThread *)malloc(sizeof(DadosThread));
+
+        if (dados[t] == NULL){
+            printf("Erro ao alocar dados da thread\n");
+            return 1;
+        }
+
+        dados[t]->matriz = matriz;
+        dados[t]->altura = altura;
+        dados[t]->largura = largura;
+        dados[t]->interacao = interacao;
+
+        dados[t]->linha_inicio = t * linhas_por_thread;
+
+        dados[t]->linha_fim =
+            (t == threads - 1) ? altura : (t + 1) * linhas_por_thread;
+
+        int ret = pthread_create(
+            &tids[t],
+            NULL,
+            normalizar_pthread,
+            (void *)dados[t]
+        );
+
+        if (ret != 0){
+            printf("Erro ao criar thread %d\n", t);
+            return 1;
+        }
+    }
+
+    for (int t = 0; t < threads; t++){
+
+        int ret = pthread_join(tids[t], NULL);
+
+        if (ret != 0){
+            printf("Erro ao aguardar thread %d\n", t);
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
 int** executar_mandelbrot_pthread(int altura, int largura, int interacao, int threads){
@@ -264,6 +327,26 @@ int** executar_mandelbrot_pthread_2(int altura, int largura, int interacao, int 
     
 }
 
+void salvar_pgm_normalizado(int **matriz, int altura, int largura, char *nome_arquivo){
+
+    FILE *arquivo = fopen(nome_arquivo, "w");
+
+    if (arquivo == NULL){
+        printf("Erro ao abrir arquivo de saída\n");
+        return;
+    }
+
+    for (int i = 0; i < altura; i++){
+        for (int j = 0; j < largura; j++){
+            fprintf(arquivo, "%d ", matriz[i][j]);
+        }
+
+        fprintf(arquivo, "\n");
+    }
+
+    fclose(arquivo);
+}
+
 int main(int argc, char *argv[]){
 
     if (argc < 5 || argc > 5){
@@ -284,27 +367,121 @@ int main(int argc, char *argv[]){
 
             struct timespec inicio;
             struct timespec fim;
+
+
+
             clock_gettime(CLOCK_MONOTONIC, &inicio);
 
-            int **matriz = executar_mandelbrot_pthread_2(altura, largura, interacao, threads);
-            if (matriz == NULL){
+            int **matriz_serial = executar_mandelbrot_serial(altura, largura, interacao);
+
+            if (matriz_serial == NULL){
                 return 1;
             }
 
             clock_gettime(CLOCK_MONOTONIC, &fim);
 
-            double tempo = (fim.tv_sec - inicio.tv_sec) +
+            double tempo_serial = (fim.tv_sec - inicio.tv_sec) +
                (fim.tv_nsec - inicio.tv_nsec) / 1000000000.0;
 
-            printf("Tempo Pthread estrategia 2: %f segundos\n", tempo);
-            
-            salvar_pgm(matriz, altura, largura, interacao);
-            printf("Imagem salva em mandelbrot.pgm\n");
-            
-            for (int k = 0; k < altura; k++){
-                free(matriz[k]);
+            salvar_pgm(matriz_serial, altura, largura, interacao, "mandelbrot_lvsa_serial.pgm");
+
+
+
+            clock_gettime(CLOCK_MONOTONIC, &inicio);
+
+            int **matriz_openmp = executar_mandelbrot_openmp(altura, largura, interacao, threads);
+
+            if (matriz_openmp == NULL){
+                return 1;
             }
-            free(matriz);
+
+            clock_gettime(CLOCK_MONOTONIC, &fim);
+
+            double tempo_openmp = (fim.tv_sec - inicio.tv_sec) + (fim.tv_nsec - inicio.tv_nsec) / 1000000000.0;
+
+
+            salvar_pgm(matriz_openmp, altura, largura, interacao, "mandelbrot_lvsa_openmp.pgm");
+
+
+
+            clock_gettime(CLOCK_MONOTONIC, &inicio);
+
+            int **matriz_pthread1 = executar_mandelbrot_pthread(altura, largura, interacao, threads);
+
+            if (matriz_pthread1 == NULL){
+                return 1;
+            }
+
+            clock_gettime(CLOCK_MONOTONIC, &fim);
+
+            double tempo_pthread1 = (fim.tv_sec - inicio.tv_sec) + (fim.tv_nsec - inicio.tv_nsec) / 1000000000.0;
+
+
+            salvar_pgm(matriz_pthread1, altura, largura, interacao, "mandelbrot_lvsa_pthreads1.pgm");
+
+
+
+            int **matriz_pthread2 = executar_mandelbrot_serial(altura, largura, interacao);
+
+            if (matriz_pthread2 == NULL){
+                return 1;
+            }
+
+            clock_gettime(CLOCK_MONOTONIC, &inicio);
+
+            int erro_pthread2 = normalizar_matriz_pthread(
+                matriz_pthread2,
+                altura,
+                largura,
+                interacao,
+                threads
+            );
+
+            if (erro_pthread2 != 0){
+                return 1;
+            }
+
+            clock_gettime(CLOCK_MONOTONIC, &fim);
+
+            double tempo_pthread2 = (fim.tv_sec - inicio.tv_sec) +
+                (fim.tv_nsec - inicio.tv_nsec) / 1000000000.0;
+
+            salvar_pgm_normalizado(
+                matriz_pthread2,
+                altura,
+                largura,
+                "mandelbrot_lvsa_pthreads2.pgm"
+            );
+
+
+
+            FILE *arquivo_tempo = fopen("times.txt", "w");
+
+            if (arquivo_tempo == NULL){
+                printf("Erro ao criar arquivo times.txt\n");
+                return 1;
+            }
+
+            fprintf(arquivo_tempo, "Serial: %f segundos\n", tempo_serial);
+            fprintf(arquivo_tempo, "OpenMP: %f segundos\n", tempo_openmp);
+            fprintf(arquivo_tempo, "Pthreads 1: %f segundos\n", tempo_pthread1);
+            fprintf(arquivo_tempo, "Pthreads 2: %f segundos\n", tempo_pthread2);
+
+            fclose(arquivo_tempo);
+
+
+
+            for (int k = 0; k < altura; k++){
+                free(matriz_serial[k]);
+                free(matriz_openmp[k]);
+                free(matriz_pthread1[k]);
+                free(matriz_pthread2[k]);
+            }
+
+            free(matriz_serial);
+            free(matriz_openmp);
+            free(matriz_pthread1);
+            free(matriz_pthread2);
         }
     }
 }
