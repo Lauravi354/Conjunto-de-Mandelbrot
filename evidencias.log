@@ -1,0 +1,42 @@
+Script started on 2026-09-02 18:41:23-03:00 [TERM="xterm-256color" TTY="/dev/pts/2" COLUMNS="133" LINES="16"]
+[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ [7mdate[27mdate
+[?2004lWed Sep  2 18:41:40 -03 2026
+[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ [7mwhoami[27mwhoami
+[?2004llaura
+[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ [7mpwd[27mpwd
+[?2004l/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot
+[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ make clean
+[?2004lrm -f *.o mandelbrot
+[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ make
+[?2004lgcc -c main.c
+gcc main.o -o mandelbrot -lm -pthread -fopenmp
+[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ [7m./mandelbrot 800 600 100 4[27m./mandelbrot 800 600 100 4
+[?2004l[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ ^C[?2004l[?2004h[?2004l
+[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ [7mcat times.txt[27mcat times.txt
+[?2004lSerial: 0.058776 segundos
+OpenMP: 0.055829 segundos
+Pthreads 1: 0.031446 segundos
+Pthreads 2: 0.001030 segundos
+[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ [7mcmp mandelbrot_lvsa_serial.pgm mandelbrot_lvsa_o[27m[7mp[27m[7menmp.pgm[27m[A]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ cmp mandelbrot_lvsa_serial.pgm mandelbrot_lvsa_openmp.pgm
+[?2004l[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ [7mcmp mandelbrot_lvsa_serial.pgm mandelbrot_lvsa_p[27m[7mt[27m[7mhreads1.pgm[27m[A]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ cmp mandelbrot_lvsa_serial.pgm mandelbrot_lvsa_pthreads1.pgm
+[?2004l[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ [7mcmp mandelbrot_lvsa_serial.pgm mandelbrot_lvsa_p[27m[7mt[27m[7mhreads2.pgm[27m[A]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ cmp mandelbrot_lvsa_serial.pgm mandelbrot_lvsa_pthreads2.pgm
+[?2004l[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ [7m./mandelbrot 800 600[27m./mandelbrot 800 600
+[?2004lformato esperado: ./mandelbrot altura largura interações threads[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ [7m./mandelbrot 0 600 100 4[27m./mandelbrot 0 600 100 4
+[?2004lvocê excedeu algum limite de valor[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ [7mgit --no-pager log --reverse --oneline --date=lo[27m[7mc[27m[7mal --pretty=format:"%h | %ad | %s"[27m[A]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ git --no-pager log --reverse --oneline --date=local --pretty=format:"%h | %ad | %s"
+[?2004lbf0342c | Sat Aug 29 06:57:58 2026 | cria main com validação de entrada
+65c0502 | Sun Aug 30 02:41:17 2026 | implementa cálculo do conjunto de Mandelbrot
+dedf9af | Sun Aug 30 02:55:31 2026 | adiciona matriz para armazenar iterações
+392d021 | Mon Aug 31 12:15:29 2026 | salva resultado em arquivo .pgm
+b00c516 | Mon Aug 31 13:57:21 2026 | separa funções calcular_pixel e salvar_pgm
+62cced5 | Mon Aug 31 14:58:22 2026 | separa executar_mandelbrot_serial
+74451af | Mon Aug 31 15:13:36 2026 | adiciona medição de tempo de execução
+1a70155 | Mon Aug 31 18:38:12 2026 | adiciona executar_mandelbrot_openmp
+c9430ff | Tue Sep 1 21:21:02 2026 | implementa execução com pthreads
+9d4ca19 | Tue Sep 1 22:38:24 2026 | Implementa segunda estrategia com Pthreads
+2c171dd | Tue Sep 1 22:55:21 2026 | Adiciona Makefile para compilacao do projeto
+cf78546 | Wed Sep 2 18:01:23 2026 | corrige erros e implementa segunda estrategia com Pthreads
+98c12b5 | Wed Sep 2 18:26:24 2026 | corrige erros
+b0f70cf | Wed Sep 2 18:33:03 2026 | corrige erro[?2004h]0;laura@ideaped-Laura: /mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[01;32mlaura@ideaped-Laura[00m:[01;34m/mnt/c/Users/laura/OneDrive/Desktop/lvsa/Conjunto-de-Mandelbrot[00m$ [7mexit[27mexit
+[?2004lexit
+
+Script done on 2026-09-02 18:44:33-03:00 [COMMAND_EXIT_CODE="0"]
