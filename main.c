@@ -132,21 +132,7 @@ void *calcular_pthread(void *arg){
     return NULL;
 }
 
-void *calcular_pthread_2(void *arg){
-    DadosThread *args = (DadosThread *)arg;
-    
-    for (int i = args->id; i < args->altura; i += args->total_threads){
-        for(int j = 0; j < args->largura; j++){
-            double cr = -2.0 + j * (3.0 / args->largura);
-            double ci = -1.5 + i * (3.0 / args->altura);
 
-            args->matriz[i][j] = calcular_pixel(cr, ci, args->interacao);
-        }
-    }
-    
-    free(args);
-    return NULL;
-}
 
 void *normalizar_pthread(void *arg){
     DadosThread *args = (DadosThread *)arg;
